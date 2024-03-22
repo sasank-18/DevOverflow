@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react"
 
 type contextType = {
-    mode : string,
+    mode : string;
     setMode: (mode:string) => void;
 }
 
