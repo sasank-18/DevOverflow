@@ -2,59 +2,71 @@
 @tailwind components;
 @tailwind utilities;
 
+
 @import url("../styles/theme.css");
 
 body {
-  font-family: var(--font-inter);
+  font-family: "Inter", sans-serif;
 }
 
 @layer utilities {
   .flex-center {
     @apply flex justify-center items-center;
   }
+  
+  .no-focus {
+    @apply focus-visible:ring-0 focus-visible:ring-transparent ;
+  }
+
   .flex-between {
     @apply flex justify-between items-center;
   }
+
   .flex-start {
     @apply flex justify-start items-center;
   }
+
   .card-wrapper {
     @apply bg-light-900 dark:dark-gradient shadow-light-100 dar;
   }
+
   .btn {
     @apply bg-light-800 dark:bg-dark-300 !important;
   }
+
   .btn-secondary {
     @apply bg-light-800 dark:bg-dark-400 !important;
   }
+
   .btn-tertiary {
     @apply bg-light-700 dark:bg-dark-300 !important;
   }
+
   .markdown {
     @apply max-w-full prose dark:prose-p:text-light-700 dark:pros;
   }
-  .primary-gradient {
-    background: linear-gradient(129deg, #ff7000 0%, #e2995f 100%);
-  }
-  .dark-gradient {
-    background: linear-gradient(
-      232deg,
-      rgba(23, 28, 35, 0.41) 0%,
-      rgba(19, 22, 28, 0.7) 100%
-    );
-  }
+
   .tab {
     @apply min-h-full dark:bg-dark-400 bg-light-800 text-light-5;
   }
 
-  .no-focus {
-    @apply focus-visible:ring-0 focus-visible:ring-transparent focus;
-  }
+}
+
+.primary-gradient {
+  background: linear-gradient(129deg, #ff7000 0%, #e2995f 100%);
+}
+
+.dark-gradient {
+  background: linear-gradient(
+    232deg,
+    rgba(23, 28, 35, 0.41) 0%,
+    rgba(19, 22, 28, 0.7) 100%
+  );
 }
 
 .active-theme {
   filter: invert(53%) sepia(98%) saturate(3332%) hue-rotate(0deg)
-    brightness(104%) contrast(106%) !important;
+    brightness(104%) contrast(106%) ;
 }
 .light-gradient {
   background: linear-gradient(
@@ -92,15 +104,11 @@ body {
 
 .markdown a,
 code {
-  /* These are technically the same, but use both */
   overflow-wrap: break-word;
   word-wrap: break-word;
   -ms-word-break: break-all;
-  /* This is the dangerous one in WebKit, as it breaks things whereve */
   word-break: break-all;
-  /* Instead use this non-standard one:  */
   word-break: break-word;
-  /* /* Adds a hyphen where the word breaks, if supported (No Blink) * */
   -ms-hyphens: auto;
   -moz-hyphens: auto;
   -webkit-hyphens: auto;
@@ -113,7 +121,6 @@ code {
   display: grid;
   width: 100%;
 }
-
 .markdown pre code {
   width: 100%;
   display: block;
@@ -123,24 +130,18 @@ code {
 
 /* Markdown End */
 /* Clerk */
-
 .cl-internal-b3fm6y {
   background: linear-gradient(129deg, #ff7000 0%, #e2995f 100%);
 }
-
 .hash-span {
   margin-top: -140px;
   padding-bottom: 140px;
   display: block;
 }
-
 /* Hide scrollbar for Chrome, Safari and Opera */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
-
-/* Hide scrollbar for IE, Edge and Firefox */
-
 .no-scrollbar {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */

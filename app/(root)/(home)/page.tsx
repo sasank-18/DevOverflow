@@ -1,9 +1,11 @@
-import { UserButton } from "@clerk/nextjs";
- 
+import LocalSearch from "@/components/shared/search/LocalSearch";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+
 export default function Home() {
   return (
-    <div className="h-screen">
-      <UserButton />
+    <div>
+    home 
     </div>
-  )
+  );
 }
