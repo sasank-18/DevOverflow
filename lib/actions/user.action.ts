@@ -29,7 +29,7 @@ export async function createUser(userData : CreateUserParams)
 {
     try{
      connectToDatabase();
-     
+     console.log('kutta',userData)
      const newUser = await User.create({userData});
      return newUser;
     }
