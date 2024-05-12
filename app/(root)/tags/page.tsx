@@ -38,7 +38,9 @@ export default async function Tag() {
                   </p>
                 </div>
                 <p className="small-medium text-dark400_light500 mt-3.5">
-                  <span className="body-semibold primary-text-gradient mr-2.5">{tag.question.length}+ questions</span>
+                  <span className="body-semibold primary-text-gradient mr-2.5">
+                    {tag.question.length}+ questions
+                  </span>
                 </p>
               </div>
             </Link>
@@ -48,7 +50,6 @@ export default async function Tag() {
             title="No Tags found"
             description="it looks like there are no tags found."
             link="/ask-question"
-            linkTitle="Ask a question"
           />
         )}
       </section>
