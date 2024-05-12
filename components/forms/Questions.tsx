@@ -48,6 +48,9 @@ const Questions = ({mongoUserId} : Props) => {
     setIsSubmitting(true);
  
     try{
+      console.log(values.title)
+      console.log(values.explanation)
+      console.log(values.tags)
       // make an async call to your api -> createa question
       // contain all form data 
           await createQuestion({
@@ -61,7 +64,7 @@ const Questions = ({mongoUserId} : Props) => {
       // navigate to home page
          router.push('/');
     }catch(error){
-
+       console.log("error",error)       
     } finally{
       setIsSubmitting(false)
     }

@@ -33,13 +33,13 @@ const QuestionCard = ({
   answers,
 }: QuestionProps) => {
   return (
-    <div className="card-wrapper  rounded-[10px] p-9 sm:px-11">
+    <div className="card-wrapper rounded-[10px] border border-primary-100 p-9  shadow-sm dark:border-none sm:px-11">
       <div className="flex flex-col-reverse items-start justify-between gap-5 sm:flex-row">
         <div>
           <span className="subtle-regular text-dark400_light700 line-clamp-1 flex h-4 sm:hidden">
             {getTimeStamp(createdAt)}
           </span>
-          <Link href={`/question/${_id}`}>
+          <Link className="cursor-pointer" href={`/question/${_id}`}>
             <h3 className="sm:h3-semibold base-semibold text-dark200_light900 line-clamp-2 flex-1">
               {title}
             </h3>
@@ -54,8 +54,7 @@ const QuestionCard = ({
       </div>
       <div className="flex-between mt-6 w-full flex-wrap gap-3">
         <Metric
-          // imgUrl={author?.picture}
-         imgUrl =  "/assets/icons/like.svg"
+          imgUrl={author?.picture}
           alt="user"
           value={author.name}
           title={`- asked ${getTimeStamp(createdAt)}`}
