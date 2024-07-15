@@ -3,6 +3,8 @@ import React from "react";
 import RenderTag from "../shared/RenderTag";
 import Metric from "../shared/Metric";
 import { formatAndDivideNumber, getTimeStamp } from "@/lib/utils";
+import { SignedIn } from "@clerk/nextjs";
+import EditDeleteAction from "../shared/EditDeleteAction";
 
 interface QuestionProps {
   _id: string;
@@ -13,12 +15,14 @@ interface QuestionProps {
   }[];
   author: {
     _id: string;
+    clerkId?: string;
     name: string;
     picture: string;
   };
   upvotes: number;
   views: number;
   answers: Array<object>;
+  clerkId? : string | null;
   createdAt: Date;
 }
 
@@ -31,7 +35,12 @@ const QuestionCard = ({
   author,
   views,
   answers,
+  clerkId
 }: QuestionProps) => {
+
+  const showActionButton = clerkId && clerkId === author.clerkId;
+
+
   return (
     <div className="card-wrapper rounded-[10px] border border-primary-100 p-9  shadow-sm dark:border-none sm:px-11">
       <div className="flex flex-col-reverse items-start justify-between gap-5 sm:flex-row">
@@ -46,13 +55,20 @@ const QuestionCard = ({
           </Link>
         </div>
         {/* if signed in add edit delete actions */}
+
+      <SignedIn>
+        {showActionButton &&
+       <EditDeleteAction itemId = {_id} type = "Question"/>
+      }
+      </SignedIn>
+        
       </div>
       <div className="mt-3.5 flex flex-wrap gap-2">
         {tags.map((tag) => (
           <RenderTag key={tag._id} _id={tag._id} name={tag.name} />
         ))}
       </div>
-      <div className="flex-between mt-6 w-full flex-wrap gap-3">
+      <div className="flex-between  mt-6 w-full flex-wrap  gap-3">
         <Metric
           imgUrl={author?.picture}
           alt="user"
@@ -63,7 +79,7 @@ const QuestionCard = ({
           textStyle="body-medium text-dark400_light800"
         />
 
-        <div className="flex-between gap-3">
+        <div className="flex justify-end  gap-3">
           <Metric
             imgUrl="/assets/icons/like.svg"
             alt="Upvotes"

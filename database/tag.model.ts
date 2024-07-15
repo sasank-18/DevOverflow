@@ -5,7 +5,7 @@ export interface ITag extends Document{
     description : string,
     question : Schema.Types.ObjectId[],
     followers : Schema.Types.ObjectId[],
-    createdOn : Date
+    createdAt : Date
 }
 
 const TagSchema = new Schema ({

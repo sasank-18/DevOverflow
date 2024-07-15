@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import parse from 'html-react-parser';
-import Prism from 'prismjs';
-import { useEffect } from 'react';
+import parse from "html-react-parser";
+import Prism from "prismjs";
+import { useEffect } from "react";
 
 import "prismjs/components/prism-python";
 import "prismjs/components/prism-java";
@@ -27,14 +27,16 @@ import "prismjs/components/prism-mongodb";
 import "prismjs/plugins/line-numbers/prism-line-numbers.js";
 import "prismjs/plugins/line-numbers/prism-line-numbers.css";
 
-const ParseHTML = ({data}: any) => {
- useEffect(()=>{
- Prism.highlightAll();
- }, []) 
-
-  return (
-    <div className=''>{parse(`${data}`)}</div>
-  )
+interface Props {
+  data: string;
 }
 
-export default ParseHTML
+const ParseHTML = ({ data }: Props) => {
+  useEffect(() => {
+    Prism.highlightAll();
+  }, []);
+
+  return <div className={"markdown w-full  min-w-full"}>{parse(data)}</div>;
+};
+
+export default ParseHTML;

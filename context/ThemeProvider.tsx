@@ -15,6 +15,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     if (localStorage.theme === 'dark' || (!('theme'in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)){
       setMode("dark");
       document.documentElement.classList.add("dark");
+      document.documentElement.classList.remove("light");
+
     } 
     else {
       setMode("light");
@@ -24,6 +26,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
+    console.log('raj',mode)
     handleThemeChange();
   }, [mode]);
 

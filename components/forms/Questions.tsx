@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useRef, useState } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,27 +18,35 @@ import { Input } from "@/components/ui/input";
 import { QuestionSchema } from "../../lib/validation";
 import { Badge } from "../ui/badge";
 import Image from "next/image";
-import { createQuestion } from "@/lib/actions/question.action";
+import { createQuestion, editQuestion } from "@/lib/actions/question.action";
 import { useRouter, usePathname } from "next/navigation";
-const type:any = "create";
+import { useTheme } from "@/context/ThemeProvider";
 
 interface Props{
+  type ?: string,
+  questionDetail? : string | undefined,
   mongoUserId : string
+
 }
 
-const Questions = ({mongoUserId} : Props) => {
+
+const Questions = ({type, questionDetail, mongoUserId} : Props) => {
+  const question = type && JSON.parse(questionDetail || '' ) 
+
+  const tagArray = question?.tags?.map((tag : any)=>tag.name)
+
+  const {mode} = useTheme();
   const editorRef = useRef(null);
   const router = useRouter()
   const pathname= usePathname();
-  console.log(pathname);
   
   const [isSubmitting,setIsSubmitting] = useState<boolean>(false);
   const form = useForm<z.infer<typeof QuestionSchema>>({
     resolver: zodResolver(QuestionSchema),
     defaultValues: {
-      title: "",
-      explanation: "",
-      tags: [],
+      title: question?.title || "",
+      explanation: (question?.content) || "",
+      tags: tagArray || [],
     },
   });
 
@@ -48,21 +55,30 @@ const Questions = ({mongoUserId} : Props) => {
     setIsSubmitting(true);
  
     try{
-      console.log(values.title)
-      console.log(values.explanation)
-      console.log(values.tags)
-      // make an async call to your api -> createa question
-      // contain all form data 
-          await createQuestion({
-            title:values.title,
-            content: values.explanation,
-            tags: values.tags,
-            author: JSON.parse(mongoUserId),
-            path: pathname,
-            });
 
-      // navigate to home page
-         router.push('/');
+      if(type ==="Edit"){
+        await editQuestion({
+          questionId : question._id,
+          title : values.title,
+          content : values.explanation,
+          path :  pathname
+        })
+       router.push(`/question/${question._id}`)
+      }else{
+        // make an async call to your api -> createa question
+        // contain all form data 
+            await createQuestion({
+              title:values.title,
+              content: values.explanation,
+              tags: values.tags,
+              author: JSON.parse(mongoUserId),
+              path: pathname,
+              });
+  
+        // navigate to home page
+           router.push('/');
+      }
+     
     }catch(error){
        console.log("error",error)       
     } finally{
@@ -73,10 +89,8 @@ const Questions = ({mongoUserId} : Props) => {
   const handleInputKeyDown=(e: React.KeyboardEvent<HTMLInputElement>, field:any)=>{
     if(e.key === 'Enter'&& field.name==='tags'){
       e.preventDefault();
-      console.log(field)
       const tagInput = e.target as HTMLInputElement;
       const tagValue = tagInput.value.trim();
-        console.log(tagValue.length)
       if(tagValue!== '') { 
         if(tagValue.length > 15){
           return form.setError('tags', {
@@ -104,6 +118,7 @@ const Questions = ({mongoUserId} : Props) => {
   }
 
   const handleTagRemove =(tag:string, field:any) =>{
+    if(type === "Edit" ) return ;
   const newTags= field.value.filter((t:string)=>t!==tag)
   form.setValue('tags',newTags)
   }
@@ -158,7 +173,7 @@ const Questions = ({mongoUserId} : Props) => {
                   }}
                 onBlur = {field.onBlur}   
                 onEditorChange={(content)=> field.onChange(content)}                                                             
-                  initialValue=""
+                  initialValue={(question?.content)}
                   init={{
                     height: 350,
                     menubar: false,
@@ -184,6 +199,9 @@ const Questions = ({mongoUserId} : Props) => {
                       "codesample | bold italic forecolor | alignleft aligncenter " +
                       "alignright alignjustify | bullist numlist",
                     content_style: "body { font-family:inter; font-size:16px }",
+                    skin : mode ==='dark' ? "oxide-dark" : 'oxide',
+                    content_css : mode === 'dark' ? 'dark' : 'writer',
+                    theme: 'silver'
                   }}
                 />
               </FormControl>
@@ -207,7 +225,8 @@ const Questions = ({mongoUserId} : Props) => {
               </FormLabel>
               <FormControl className="mt-3.5">
                 <>
-                <Input
+                 <Input
+                disabled = {type === "Edit"}
                   className="no-focus paragraph-regular background-light900_dark300 light-border-2 text-dark300_light700 min-h-[56px] border"
                   placeholder="Add tags"
                   onKeyDown={(e)=> handleInputKeyDown(e,field)}
@@ -217,16 +236,20 @@ const Questions = ({mongoUserId} : Props) => {
                 <div className="flex-start mt-2.5 gap-2.5">
                 {field.value.map((tag)=>(
                   <Badge 
-                  onClick={()=>{handleTagRemove(tag, field)}}
+                  onClick={()=>{
+                    handleTagRemove(tag, field)
+                  }
+                  }
                   className="subtle-medium background-light800_dark300 text-light400_light500 flex items-center justify-center gap-2 rounded-md border-none px-4 py-2 capitalize" key={tag}>
-                    {tag}
-                    <Image
+                   
+                  {tag}
+                   {type === "" && <Image
                     src= "/assets/icons/close.svg"
                     alt= " close icons"
                     width = {12}
                     height= {12}    
                     className= "cursor-pointer object-contain invert-0 dark:invert"                                      
-                    />
+                    />}
                     </Badge>
                 ))}
                 </div>
@@ -244,11 +267,11 @@ const Questions = ({mongoUserId} : Props) => {
         <Button className="bg-primary-500 w-fit text-light-900" disabled= {isSubmitting} type="submit">
           {isSubmitting ? (
             <>
-            {type ==='edit' ? "Editing..." : "Posting..." }
+            {type ==='Edit' ? "Editing..." : "Posting..." }
             </>
           ): (
             <>
-            {type ==='edit' ? "Edit Question" : "Post Question"}
+            {type ==='Edit' ? "Edit Question" : "Post Question"}
             </>
           )}
 

@@ -1,12 +1,17 @@
 import Filter from "@/components/shared/Filter";
 import NoResult from "@/components/shared/NoResult";
+import Pagination from "@/components/shared/Pagination";
 import LocalSearch from "@/components/shared/search/LocalSearch";
-import { UserFilters } from "@/constant/filter";
+import { TagFilters } from "@/constant/filter";
 import { getAllTags } from "@/lib/actions/tag.action";
 import Link from "next/link";
 
-export default async function Tag() {
-  const result = await getAllTags({});
+export default async function Tag({ searchParams }: any) {
+  const result = await getAllTags({
+    searchQuery: searchParams.q,
+    filter: searchParams.filter,
+    page: searchParams?.page ? +searchParams.page : 1,
+  });
   console.log("result", result);
   return (
     <>
@@ -22,7 +27,7 @@ export default async function Tag() {
           otherClasses="flex-1"
         />
         <Filter
-          filters={UserFilters}
+          filters={TagFilters}
           otherClasses="min-h-[56px]  sm:min-w-[160px]"
         />
       </div>
@@ -53,6 +58,12 @@ export default async function Tag() {
           />
         )}
       </section>
+      <div className="mt-8">
+        <Pagination
+          pageNumber={searchParams?.page ? +searchParams.page : 1}
+          isNext={result?.isNext}
+        />
+      </div>
     </>
   );
 }

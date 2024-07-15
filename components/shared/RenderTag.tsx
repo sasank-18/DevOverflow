@@ -8,7 +8,7 @@ interface Props {
   showCount?: boolean;
 }
 
-const    RenderTag = ({ _id, name, totalQuestions, showCount }: Props) => {
+const    RenderTag = ({ _id, name, totalQuestions, showCount=false }: Props) => {
   return (
     <div>
       <Link className="flex justify-between gap-2" href={`/tags/${_id}`}>

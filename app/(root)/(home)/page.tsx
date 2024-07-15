@@ -2,14 +2,19 @@ import HomeFilter from "@/components/Home/HomeFilter";
 import QuestionCard from "@/components/cards/QuestionCard";
 import Filter from "@/components/shared/Filter";
 import NoResult from "@/components/shared/NoResult";
+import Pagination from "@/components/shared/Pagination";
 import LocalSearch from "@/components/shared/search/LocalSearch";
 import { Button } from "@/components/ui/button";
 import { HomePageFilters } from "@/constant/filter";
 import { getQuestions } from "@/lib/actions/question.action";
 import Link from "next/link";
 
-export default async function Home() {
-  const result = await getQuestions({});
+export default async function Home({searchParams} : any) {
+  const result = await getQuestions({
+    searchQuery : searchParams.q,
+    filter : searchParams.filter,
+    page : searchParams?.page ? +searchParams.page : 1
+  });
 
   return (
     <>
@@ -32,7 +37,7 @@ export default async function Home() {
         <Filter
           filters={HomePageFilters}
           containerClasses="hidden max-md:flex"
-          otherClasses="min-h-[56px] sm:min-w-[160px]"
+          otherClasses="min-h-[56px]  sm:min-w-[160px]"
         />
       </div>
       <HomeFilter />
@@ -45,7 +50,7 @@ export default async function Home() {
               title={question.title}
               tags={question.tags}
               author={question.author}
-              upvotes={question.upvotes}
+              upvotes={question.upvotes.length}
               views={question.views}
               answers={question.answers}
               createdAt={question.createdAt}
@@ -58,6 +63,12 @@ export default async function Home() {
             link="/ask-question"
           />
         )}
+
+        <div className=" mt-8">
+          <Pagination
+          pageNumber = {searchParams?.page  ? +searchParams.page : 1}
+          isNext = {result?.isNext}/>
+        </div>
       </div>
     </>
   );

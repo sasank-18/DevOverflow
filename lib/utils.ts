@@ -1,8 +1,42 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
+import qs from 'query-string';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
+}
+
+
+
+export const setUrlQuery  = ({ param,key ,  searchValue} : {
+    param : string,key : string ,searchValue : string
+})=>{
+  const currentURL =   qs.parse(param)
+  currentURL[key] = searchValue;
+  
+  const updatedUrl = qs.stringifyUrl({
+    url : window.location.pathname, 
+    query : currentURL
+  })
+  return updatedUrl;
+}
+
+
+export const removeUrlQuery  = ({ param, keyToRemove} : {
+    param : string,keyToRemove : string[]
+})=>{
+  const currentURL =   qs.parse(param)
+
+   keyToRemove.map((key)=>(
+     delete currentURL[key]
+   ))
+  
+  const updatedUrl = qs.stringifyUrl({
+    url : window.location.pathname, 
+    query : currentURL
+  })
+  
+  return updatedUrl;
 }
 
 
@@ -43,3 +77,22 @@ export const formatAndDivideNumber = (number: number): string => {
       return number.toString();
   }
 };
+
+export function formatDate(date : Date):string {
+    // Array of month names
+
+     console.log("date",date)
+     
+    const months = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+  
+    // Get the month and year from the Date object
+    const month = months[date.getMonth()];
+    const year = date.getFullYear();
+  
+    // Return the formatted string
+    return `${month} ${year}`;
+  }
+  

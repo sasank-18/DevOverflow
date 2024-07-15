@@ -12,7 +12,7 @@ import Image from "next/image";
 import { themes } from "@/constant";
 const Theme = () => {
   const { mode, setMode } = useTheme();
-
+  console.log('modify',mode)
   return (
     <Menubar className="relative border-none  shadow-none">
       <MenubarMenu>

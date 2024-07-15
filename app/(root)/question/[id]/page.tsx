@@ -1,15 +1,25 @@
 import Answer from "@/components/forms/Answer";
+import AllAnswer from "@/components/shared/AllAnswer";
 import Metric from "@/components/shared/Metric";
 import ParseHTML from "@/components/shared/ParseHTML";
 import RenderTag from "@/components/shared/RenderTag";
+import Votes from "@/components/shared/Votes";
 import { getQuestionById } from "@/lib/actions/question.action";
+import { getUserById } from "@/lib/actions/user.action";
 import { formatAndDivideNumber, getTimeStamp } from "@/lib/utils";
+import { auth } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 
-const page = async ({ params } : any) => {
+const page = async ({ params, searchParams } : any ) => {
+  const {userId} = auth()
+  let mongoUser
+    if(userId){
+      mongoUser =  await getUserById(userId);
+    }
   const result = await getQuestionById({ questionId: params.id });
-  console.log(result);
+
+
   return (
     <>
       <div className="flex-start w-full flex-col">
@@ -29,7 +39,20 @@ const page = async ({ params } : any) => {
               {result.author.name}
             </p>
           </Link>
-          <div className="flex justify-end">voting</div>
+          <div className="flex justify-end">
+             
+             <Votes
+             type = "Question"
+             itemId ={JSON.stringify(result._id)}
+             userId =  {JSON.stringify(mongoUser?._id)}
+             upvotes = {result.upvotes.length}
+             hasUpVoted = {result.upvotes.includes(mongoUser?._id)}
+             downvotes = {result.downvotes.length}
+             hasDownVoted = {result.downvotes.includes(mongoUser?._id)}
+             hasSaved = {mongoUser?.saved.includes(result._id)}
+             />
+
+          </div>
         </div>
         <h2 className="h2-semibold text-dark200_light900 mt-3.5 w-full text-left">
           {result.title}
@@ -64,7 +87,7 @@ const page = async ({ params } : any) => {
       
       <ParseHTML data={result.content} />
 
-      <div className="mt-3 flex flex-wrap gap-3">
+      <div className="mt-6 flex flex-wrap gap-3">
         {result.tags.map((tag: any) => (
           <RenderTag
             key={tag._id}
@@ -74,7 +97,18 @@ const page = async ({ params } : any) => {
           />
         ))}
       </div>
-      <Answer/>
+
+
+     <AllAnswer
+      userId = {mongoUser?._id} 
+      questionId= {result._id}
+      totalAnswers = {result .answers.length}
+      page = {searchParams?.page}
+      filter = {searchParams?.filter}
+      />
+
+
+      <Answer questionId= {JSON.stringify(result._id)} question = {JSON.stringify(result.content)} authorId = {JSON.stringify(mongoUser?._id)}/>
     </>
   );
 };
