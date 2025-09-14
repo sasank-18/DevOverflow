@@ -34,11 +34,11 @@ The platform enables global knowledge sharing, collaboration, and community-driv
 ---
 
 ## 🛠 Tech Stack
-- **Frontend**: [Next.js 14+](https://nextjs.org/) (App Router) with **TypeScript**  
+- **Frontend**: (App Router) with **TypeScript**  
 - **Backend**: Next.js Server Actions  
 - **Database**: MongoDB  
 - **Styling**: Tailwind CSS  
-- **Auth**: NextAuth.js (if implemented)  
+- **Auth**: Clerk 
 - **Deployment**: Vercel  
 
 ---
